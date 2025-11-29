@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание группы ИУ6-12Б</title>
+    <link rel="stylesheet" href="Site.css">
+</head>
+
+<body>
+    <h1>Расписание</h1>
+    <div class="group-selector">ИУ6-12Б</div>
+
+    <div class="control-buttons">
+        <button class="btn" onclick="document.getElementById('pricol-audio').play()">Прикол</button>
+
+        <details>
+            <summary class="btn">Добавить предмет</summary>
+            <form class="add-form">
+                <label for="subject">Название предмета:</label>
+                <input type="text" id="subject" name="subject" placeholder="Например: Математический анализ">
+
+                <label for="day">День недели:</label>
+                <select id="day" name="day">
+                    <option value="пн">Понедельник</option>
+                    <option value="вт">Вторник</option>
+                    <option value="ср">Среда</option>
+                    <option value="чт">Четверг</option>
+                    <option value="пт">Пятница</option>
+                    <option value="сб">Суббота</option>
+                </select>
+
+                <label for="week-type">Тип недели:</label>
+                <select id="week-type" name="week-type">
+                    <option value="zn">Знаменатель</option>
+                    <option value="ch">Числитель</option>
+                    <option value="both">Обе недели</option>
+                </select>
+
+                <label for="time">Время (например, 12:00–13:35):</label>
+                <input type="text" id="time" name="time" placeholder="12:00–13:35">
+            </form>
+        </details>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active">Сетка</div>
+    </div>
+
+    <div class="schedule-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ПН</th>
+                    <th>ВТ</th>
+                    <th>СР</th>
+                    <th>ЧТ</th>
+                    <th>ПТ</th>
+                    <th>СБ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="time-cell">08:30<br>10:05</td>
+                    <td></td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>ИР<br>829л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--orange"><br>ФКиС<br>9.35...</div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="time-cell">10:15<br>11:50</td>
+                    <td></td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><span class="period">ЧС</span><br>ИР<br>224л</div>
+                            <div class="lesson lesson--blue"><span class="period">ЗН</span><br>Соц<br>224л</div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>АиП<br>533л</div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="time-cell">12:00<br>13:35</td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--purple"><br>АиП<br>805</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>МА<br>224л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>ИЯ<br>каф.<br>Л2</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>НГ<br>224л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>АГ<br>137л</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="time-cell">13:50<br>15:25</td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--purple"><br>АиП<br>805</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>ФКиС<br>каф.<br>ФВ</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>АГ<br>224л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><span class="period">ЧС</span><br>Инф<br>830л</div>
+                            <div class="lesson lesson--green"><span class="period">ЗН</span><br>МА<br>830л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>НГ<br>533л<br>534л</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="time-cell">15:40<br>17:15</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--blue"><br>Инф<br>224л</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>МА<br>830л</div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="time-cell">17:25<br>19:00</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <div class="lesson-container">
+                            <div class="lesson lesson--green"><br>Соц<br>831л</div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="time-cell">19:10<br>20:45</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <audio id="pricol-audio" src="pricol.mp3"></audio>
+</body>
+
+</html>
