@@ -5,7 +5,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание группы ИУ6-12Б</title>
-    <link rel="stylesheet" href="Site.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .group-selector {
+            color: #1e90ff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .tab.active {
+            background-color: #555;
+        }
+
+        .schedule-container {
+            width: 100%;
+            max-width: 800px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: visible;
+        }
+
+        th,
+        td {
+            padding: 0;
+            text-align: center;
+            border: 1px solid #444;
+            position: relative;
+            height: 80px;
+        }
+
+        th {
+            background-color: #2d2d2d;
+            font-weight: bold;
+            height: 40px;
+        }
+
+        .time-cell {
+            background-color: #2d2d2d;
+            font-weight: bold;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .schedule-cell {
+            cursor: default;
+        }
+
+        .lesson-container {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            padding: 2px;
+            box-sizing: border-box;
+            gap: 2px;
+        }
+
+        .lesson {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            line-height: 1.1;
+            text-align: center;
+            overflow: hidden;
+            box-sizing: border-box;
+            flex: 1;
+            position: relative;
+        }
+
+        .lesson .period {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 0.6em;
+            opacity: 0.8;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 1px 3px;
+            border-radius: 2px;
+            z-index: 2;
+        }
+
+        .lesson--green {
+            background-color: #137e17;
+        }
+
+        .lesson--blue {
+            background-color: #2d6391;
+        }
+
+        .lesson--purple {
+            background-color: #67138f;
+        }
+
+        .lesson--orange {
+            background-color: #b87507;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        .add-form {
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 90%;
+            max-width: 600px;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .form-group input[type="text"],
+        .form-group select,
+        .form-group input[type="radio"],
+        .form-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .form-group fieldset {
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #252525;
+        }
+
+        .form-group legend {
+            padding: 0 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .form-group button {
+            padding: 4px 8px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .form-group button:hover {
+            background: #555;
+        }
+
+        audio {
+            display: none;
+        }
+
+        /* Стиль для всплывающего изображения */
+        #popup-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 80%;
+            z-index: 1000;
+            border: 4px solid #ff6b6b;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+            display: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -13,34 +254,55 @@
     <div class="group-selector">ИУ6-12Б</div>
 
     <div class="control-buttons">
-        <button class="btn" onclick="document.getElementById('pricol-audio').play()">Прикол</button>
+        <!-- Кнопка "Уведомление" (вместо "Прикол") -->
+        <button class="btn" onclick="showNotification()">Уведомление</button>
+        <button class="btn" onclick="stopNotification()">Стоп</button>
 
         <details>
             <summary class="btn">Добавить предмет</summary>
-            <form class="add-form">
-                <label for="subject">Название предмета:</label>
-                <input type="text" id="subject" name="subject" placeholder="Например: Математический анализ">
+            <div class="add-form">
+                <div class="form-group">
+                    <label>Название предмета:</label>
+                    <input type="text" id="subject-input" placeholder="Предмет" style="width: 100%; padding: 4px; background: #1e1e1e; color: white; border: 1px solid #555; border-radius: 4px;">
+                </div>
 
-                <label for="day">День недели:</label>
-                <select id="day" name="day">
-                    <option value="пн">Понедельник</option>
-                    <option value="вт">Вторник</option>
-                    <option value="ср">Среда</option>
-                    <option value="чт">Четверг</option>
-                    <option value="пт">Пятница</option>
-                    <option value="сб">Суббота</option>
-                </select>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>День недели</legend>
+                        <label><input type="radio" name="day" value="пн" checked> Понедельник</label>
+                        <label><input type="radio" name="day" value="вт"> Вторник</label>
+                        <label><input type="radio" name="day" value="ср"> Среда</label>
+                        <label><input type="radio" name="day" value="чт"> Четверг</label>
+                        <label><input type="radio" name="day" value="пт"> Пятница</label>
+                        <label><input type="radio" name="day" value="сб"> Суббота</label>
+                    </fieldset>
+                </div>
 
-                <label for="week-type">Тип недели:</label>
-                <select id="week-type" name="week-type">
-                    <option value="zn">Знаменатель</option>
-                    <option value="ch">Числитель</option>
-                    <option value="both">Обе недели</option>
-                </select>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Пара</legend>
+                        <label><input type="checkbox" name="pair" value="1"> 1 пара</label>
+                        <label><input type="checkbox" name="pair" value="2"> 2 пара</label>
+                        <label><input type="checkbox" name="pair" value="3"> 3 пара</label>
+                        <label><input type="checkbox" name="pair" value="4"> 4 пара</label>
+                        <label><input type="checkbox" name="pair" value="5"> 5 пара</label>
+                        <label><input type="checkbox" name="pair" value="6"> 6 пара</label>
+                    </fieldset>
+                </div>
 
-                <label for="time">Время (например, 12:00–13:35):</label>
-                <input type="text" id="time" name="time" placeholder="12:00–13:35">
-            </form>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Тип недели</legend>
+                        <label><input type="radio" name="week-type" value="both" checked> Обе</label>
+                        <label><input type="radio" name="week-type" value="ch"> Числитель</label>
+                        <label><input type="radio" name="week-type" value="zn"> Знаменатель</label>
+                    </fieldset>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" id="apply-btn" style="padding: 4px 8px; background: #333; color: white; border: none; cursor: pointer;">Изменить</button>
+                </div>
+            </div>
         </details>
     </div>
 
@@ -62,151 +324,246 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- 1 пара: 08:30–10:05 -->
                 <tr>
                     <td class="time-cell">08:30<br>10:05</td>
-                    <td></td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="1"></td>
+                    <td class="schedule-cell" data-day="вт" data-slot="1">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>ИР<br>829л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="ср" data-slot="1">
                         <div class="lesson-container">
                             <div class="lesson lesson--orange"><br>ФКиС<br>9.35...</div>
                         </div>
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="schedule-cell" data-day="чт" data-slot="1"></td>
+                    <td class="schedule-cell" data-day="пт" data-slot="1"></td>
+                    <td class="schedule-cell" data-day="сб" data-slot="1"></td>
                 </tr>
+
+                <!-- 2 пара: 10:15–11:50 -->
                 <tr>
                     <td class="time-cell">10:15<br>11:50</td>
-                    <td></td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="2"></td>
+                    <td class="schedule-cell" data-day="вт" data-slot="2">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><span class="period">ЧС</span><br>ИР<br>224л</div>
                             <div class="lesson lesson--blue"><span class="period">ЗН</span><br>Соц<br>224л</div>
                         </div>
                     </td>
-                    <td></td>
-                    <td>
+                    <td class="schedule-cell" data-day="ср" data-slot="2"></td>
+                    <td class="schedule-cell" data-day="чт" data-slot="2">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>АиП<br>533л</div>
                         </div>
                     </td>
-                    <td></td>
-                    <td></td>
+                    <td class="schedule-cell" data-day="пт" data-slot="2"></td>
+                    <td class="schedule-cell" data-day="сб" data-slot="2"></td>
                 </tr>
+
+                <!-- 3 пара: 12:00–13:35 -->
                 <tr>
                     <td class="time-cell">12:00<br>13:35</td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--purple"><br>АиП<br>805</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="вт" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>МА<br>224л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="ср" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="чт" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>ИЯ<br>каф.<br>Л2</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="пт" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>НГ<br>224л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="сб" data-slot="3">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>АГ<br>137л</div>
                         </div>
                     </td>
                 </tr>
+
+                <!-- 4 пара: 13:50–15:25 -->
                 <tr>
                     <td class="time-cell">13:50<br>15:25</td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--purple"><br>АиП<br>805</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="вт" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>ФКиС<br>каф.<br>ФВ</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="ср" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="чт" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>АГ<br>224л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="пт" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><span class="period">ЧС</span><br>Инф<br>830л</div>
                             <div class="lesson lesson--green"><span class="period">ЗН</span><br>МА<br>830л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="сб" data-slot="4">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>НГ<br>533л<br>534л</div>
                         </div>
                     </td>
                 </tr>
+
+                <!-- 5 пара: 15:40–17:15 -->
                 <tr>
                     <td class="time-cell">15:40<br>17:15</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="5"></td>
+                    <td class="schedule-cell" data-day="вт" data-slot="5"></td>
+                    <td class="schedule-cell" data-day="ср" data-slot="5"></td>
+                    <td class="schedule-cell" data-day="чт" data-slot="5">
                         <div class="lesson-container">
                             <div class="lesson lesson--blue"><br>Инф<br>224л</div>
                         </div>
                     </td>
-                    <td>
+                    <td class="schedule-cell" data-day="пт" data-slot="5">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>МА<br>830л</div>
                         </div>
                     </td>
-                    <td></td>
+                    <td class="schedule-cell" data-day="сб" data-slot="5"></td>
                 </tr>
+
+                <!-- 6 пара: 17:25–19:00 -->
                 <tr>
                     <td class="time-cell">17:25<br>19:00</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
+                    <td class="schedule-cell" data-day="пн" data-slot="6"></td>
+                    <td class="schedule-cell" data-day="вт" data-slot="6"></td>
+                    <td class="schedule-cell" data-day="ср" data-slot="6"></td>
+                    <td class="schedule-cell" data-day="чт" data-slot="6"></td>
+                    <td class="schedule-cell" data-day="пт" data-slot="6">
                         <div class="lesson-container">
                             <div class="lesson lesson--green"><br>Соц<br>831л</div>
                         </div>
                     </td>
-                    <td></td>
+                    <td class="schedule-cell" data-day="сб" data-slot="6"></td>
                 </tr>
+
+                <!-- 7 пара: 19:10–20:45 -->
                 <tr>
                     <td class="time-cell">19:10<br>20:45</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="schedule-cell" data-day="пн" data-slot="7"></td>
+                    <td class="schedule-cell" data-day="вт" data-slot="7"></td>
+                    <td class="schedule-cell" data-day="ср" data-slot="7"></td>
+                    <td class="schedule-cell" data-day="чт" data-slot="7"></td>
+                    <td class="schedule-cell" data-day="пт" data-slot="7"></td>
+                    <td class="schedule-cell" data-day="сб" data-slot="7"></td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <!-- Аудио и изображение для уведомления -->
     <audio id="pricol-audio" src="pricol.mp3"></audio>
+    <img id="popup-image" src="notification.jpeg" alt="Уведомление">
+
+    <script>
+        // === УВЕДОМЛЕНИЕ (звук + картинка) ===
+        function showNotification() {
+            const audio = document.getElementById('pricol-audio');
+            audio.currentTime = 0;
+            audio.play();
+
+            const img = document.getElementById('popup-image');
+            img.style.display = 'block';
+
+            // Скрыть через 3 секунды
+            setTimeout(() => {
+                img.style.display = 'none';
+            }, 3000);
+
+            // Скрыть по клику
+            img.onclick = () => {
+                img.style.display = 'none';
+            };
+        }
+
+        function stopNotification() {
+            const audio = document.getElementById('pricol-audio');
+            audio.pause();
+            audio.currentTime = 0;
+            document.getElementById('popup-image').style.display = 'none';
+        }
+
+        // === ЛОГИКА РАСПИСАНИЯ (БЕЗ ИЗМЕНЕНИЙ) ===
+        document.addEventListener('DOMContentLoaded', () => {
+            function updateCell(day, slot, subject, weekType) {
+                const cell = document.querySelector(`.schedule-cell[data-day="${day}"][data-slot="${slot}"]`);
+                if (!cell) return;
+
+                cell.innerHTML = '';
+
+                if (!subject || subject.trim() === '') return;
+
+                const container = document.createElement('div');
+                container.className = 'lesson-container';
+
+                const lesson = document.createElement('div');
+                lesson.className = (weekType === 'ch' || weekType === 'zn') ? 'lesson lesson--blue' : 'lesson lesson--green';
+
+                if (weekType === 'ch' || weekType === 'zn') {
+                    const period = document.createElement('span');
+                    period.className = 'period';
+                    period.textContent = weekType === 'ch' ? 'ЧС' : 'ЗН';
+                    lesson.appendChild(period);
+                }
+
+                lesson.innerHTML += '<br>' + subject.trim().replace(/\n/g, '<br>');
+                container.appendChild(lesson);
+                cell.appendChild(container);
+            }
+
+            document.getElementById('apply-btn').addEventListener('click', () => {
+                const subject = document.getElementById('subject-input').value;
+                const day = document.querySelector('input[name="day"]:checked').value;
+                const weekType = document.querySelector('input[name="week-type"]:checked').value;
+
+                const selectedPairs = Array.from(document.querySelectorAll('input[name="pair"]:checked'))
+                    .map(cb => cb.value);
+
+                if (selectedPairs.length === 0) {
+                    alert('Выберите хотя бы одну пару.');
+                    return;
+                }
+
+                selectedPairs.forEach(slot => {
+                    updateCell(day, slot, subject, weekType);
+                });
+
+                document.getElementById('subject-input').value = '';
+                document.querySelectorAll('input[name="pair"]:checked').forEach(cb => cb.checked = false);
+            });
+        });
+    </script>
 </body>
 
 </html>
