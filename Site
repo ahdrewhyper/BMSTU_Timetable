@@ -1,212 +1,323 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>React Практикум: 3 задания</title>
+    <style>
+      :root { --bg:#0b1020; --card:#111831; --text:#e9ecf1; --muted:#98a2b3; --accent:#3b82f6; --ok:#22c55e; --danger:#ef4444; }
+      *{box-sizing:border-box}
+      body{margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--text)}
+      .container{max-width:1100px; margin:40px auto; padding:0 20px}
+      .title{font-size:28px; font-weight:800; letter-spacing:.3px; margin-bottom:18px}
+      .grid{display:grid; gap:20px; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr))}
+      .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.25)}
+      .card h2{margin:0 0 10px; font-size:20px}
+      .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+      .btn{appearance:none; border:1px solid rgba(255,255,255,.12); background:#1b2342; color:var(--text); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+      .btn:disabled{opacity:.5; cursor:not-allowed}
+      .btn.primary{background:var(--accent); border-color:transparent}
+      .btn.danger{background:#2a2135; border-color:#3b2a44; color:#ffd7e1}
+      input, select{background:#0f1530; border:1px solid rgba(255,255,255,.12); color:var(--text); padding:10px 12px; border-radius:10px; outline:none; width:100%}
+      ul{list-style:none; padding:0; margin:0}
+      li{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,.08)}
+      .muted{color:var(--muted)}
+      progress{width:100%; height:14px}
+      .counter{font-size:48px; font-weight:900}
+      .badge{display:inline-block; padding:4px 8px; border-radius:20px; background:#13325a; color:#a8d2ff; font-weight:700}
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расписание группы ИУ6-12Б</title>
-    <link rel="stylesheet" href="Site.css">
-</head>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<body>
-    <h1>Расписание</h1>
-    <div class="group-selector">ИУ6-12Б</div>
+    <script type="text/babel">
+      const { useState, useEffect, useMemo, useRef } = React;
 
-    <div class="control-buttons">
-        <button class="btn" onclick="document.getElementById('pricol-audio').play()">Прикол</button>
+      /* ================= ZADANIE 1 ================= */
+      function Task1() {
+        const [count, setCount] = useState(0);
 
-        <details>
-            <summary class="btn">Добавить предмет</summary>
-            <form class="add-form">
-                <label for="subject">Название предмета:</label>
-                <input type="text" id="subject" name="subject" placeholder="Например: Математический анализ">
+        const increment = () => setCount(count + 1);
+        const decrement = () => setCount(count - 1);
+        const reset = () => setCount(0);
 
-                <label for="day">День недели:</label>
-                <select id="day" name="day">
-                    <option value="пн">Понедельник</option>
-                    <option value="вт">Вторник</option>
-                    <option value="ср">Среда</option>
-                    <option value="чт">Четверг</option>
-                    <option value="пт">Пятница</option>
-                    <option value="сб">Суббота</option>
-                </select>
+        useEffect(() => {
+          const handleKeyDown = (e) => {
+            if (e.key === 'ArrowUp') {
+              setCount(c => c + 1);
+            } else if (e.key === 'ArrowDown' && count > 0) {
+              setCount(c => c - 1);
+            }
+          };
+          window.addEventListener('keydown', handleKeyDown);
+          return () => window.removeEventListener('keydown', handleKeyDown);
+        }, [count]);
 
-                <label for="week-type">Тип недели:</label>
-                <select id="week-type" name="week-type">
-                    <option value="zn">Знаменатель</option>
-                    <option value="ch">Числитель</option>
-                    <option value="both">Обе недели</option>
-                </select>
+        const showCongrats = count > 0 && count % 10 === 0;
 
-                <label for="time">Время (например, 12:00–13:35):</label>
-                <input type="text" id="time" name="time" placeholder="12:00–13:35">
-            </form>
-        </details>
-    </div>
+        return (
+          <div className="card">
+            <h2>Счётчик</h2>
+            <div className="counter">{count}</div>
+            <div className="row" style={{ marginTop: '12px' }}>
+              <button className="btn" onClick={increment}>+1</button>
+              <button className="btn" onClick={decrement} disabled={count === 0}>−1</button>
+              <button className="btn" onClick={reset}>Reset</button>
+            </div>
+            {showCongrats && <div className="badge" style={{ marginTop: '10px' }}>Молодец!</div>}
+          </div>
+        );
+      }
 
-    <div class="tabs">
-        <div class="tab active">Сетка</div>
-    </div>
+      /* ================= ZADANIE 2 ================= */
+      function Task2() {
+        const [todos, setTodos] = useState([]);
+        const [inputValue, setInputValue] = useState('');
+        const [filter, setFilter] = useState('all');
 
-    <div class="schedule-container">
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>ПН</th>
-                    <th>ВТ</th>
-                    <th>СР</th>
-                    <th>ЧТ</th>
-                    <th>ПТ</th>
-                    <th>СБ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="time-cell">08:30<br>10:05</td>
-                    <td></td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>ИР<br>829л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--orange"><br>ФКиС<br>9.35...</div>
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="time-cell">10:15<br>11:50</td>
-                    <td></td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><span class="period">ЧС</span><br>ИР<br>224л</div>
-                            <div class="lesson lesson--blue"><span class="period">ЗН</span><br>Соц<br>224л</div>
-                        </div>
-                    </td>
-                    <td></td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>АиП<br>533л</div>
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="time-cell">12:00<br>13:35</td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--purple"><br>АиП<br>805</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>МА<br>224л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>ИЯ<br>каф.<br>Л2</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>НГ<br>224л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>АГ<br>137л</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="time-cell">13:50<br>15:25</td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--purple"><br>АиП<br>805</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>ФКиС<br>каф.<br>ФВ</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>АиП<br>501ю</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>АГ<br>224л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><span class="period">ЧС</span><br>Инф<br>830л</div>
-                            <div class="lesson lesson--green"><span class="period">ЗН</span><br>МА<br>830л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>НГ<br>533л<br>534л</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="time-cell">15:40<br>17:15</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--blue"><br>Инф<br>224л</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>МА<br>830л</div>
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="time-cell">17:25<br>19:00</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <div class="lesson-container">
-                            <div class="lesson lesson--green"><br>Соц<br>831л</div>
-                        </div>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="time-cell">19:10<br>20:45</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <audio id="pricol-audio" src="pricol.mp3"></audio>
-</body>
+        useEffect(() => {
+          const saved = localStorage.getItem('todos');
+          if (saved) {
+            try {
+              setTodos(JSON.parse(saved));
+            } catch (e) {
+              console.error('Failed to parse todos from localStorage');
+            }
+          }
+        }, []);
 
+        useEffect(() => {
+          localStorage.setItem('todos', JSON.stringify(todos));
+        }, [todos]);
+
+        const addTodo = () => {
+          if (inputValue.trim() === '') return;
+          const newTodo = {
+            id: Date.now(),
+            text: inputValue.trim(),
+            completed: false,
+          };
+          setTodos([...todos, newTodo]);
+          setInputValue('');
+        };
+
+        const removeTodo = (id) => {
+          setTodos(todos.filter(todo => todo.id !== id));
+        };
+
+        const toggleTodo = (id) => {
+          setTodos(todos.map(todo =>
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo
+          ));
+        };
+
+        const handleKeyDown = (e) => {
+          if (e.key === 'Enter') addTodo();
+        };
+
+        const filteredTodos = useMemo(() => {
+          if (filter === 'active') return todos.filter(t => !t.completed);
+          if (filter === 'completed') return todos.filter(t => t.completed);
+          return todos;
+        }, [todos, filter]);
+
+        const total = todos.length;
+        const completed = todos.filter(t => t.completed).length;
+
+        return (
+          <div className="card">
+            <h2>Todo-лист</h2>
+            <div className="row" style={{ marginBottom: '12px' }}>
+              <input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Новая задача"
+              />
+              <button className="btn primary" onClick={addTodo}>Добавить</button>
+            </div>
+
+            <div className="row" style={{ marginBottom: '12px' }}>
+              <button
+                className={`btn ${filter === 'all' ? 'primary' : ''}`}
+                onClick={() => setFilter('all')}
+              >
+                Все
+              </button>
+              <button
+                className={`btn ${filter === 'active' ? 'primary' : ''}`}
+                onClick={() => setFilter('active')}
+              >
+                Активные
+              </button>
+              <button
+                className={`btn ${filter === 'completed' ? 'primary' : ''}`}
+                onClick={() => setFilter('completed')}
+              >
+                Выполненные
+              </button>
+            </div>
+
+            <ul>
+              {filteredTodos.map(todo => (
+                <li key={todo.id}>
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => toggleTodo(todo.id)}
+                  />
+                  <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                    {todo.text}
+                  </span>
+                  <button className="btn danger" onClick={() => removeTodo(todo.id)}>×</button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="muted" style={{ marginTop: '12px' }}>
+              Всего: {total} | Выполнено: {completed}
+            </div>
+          </div>
+        );
+      }
+
+      /* ================= ZADANIE 3 ================= */
+      const QUESTIONS = [
+        { q: 'Какой хук используют для локального состояния?', options: ['useList', 'useState', 'useReducerize', 'useContextOnly'], answer: 1 },
+        { q: 'Какой проп обязателен для элементов списка?', options: ['className', 'style', 'key', 'id'], answer: 2 },
+        { q: 'Где верно навешивать обработчик клика?', options: ['onclick', 'onClick', 'handleClick()', 'whenClick'], answer: 1 },
+        { q: 'Какой хук подходит для синхронизации с localStorage?', options: ['useId', 'useEffect', 'useMemo', 'useTransition'], answer: 1 },
+        { q: 'Как чаще всего рендерят список?', options: ['map()', 'forEach()', 'reduce()', 'filter()'], answer: 0 },
+      ];
+
+      function Task3() {
+        const [currentQuestion, setCurrentQuestion] = useState(0);
+        const [selectedAnswer, setSelectedAnswer] = useState(null);
+        const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
+        const [finished, setFinished] = useState(false);
+        const [timeLeft, setTimeLeft] = useState(20);
+        const intervalRef = useRef(null);
+
+        useEffect(() => {
+          setTimeLeft(20);
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          if (!finished && currentQuestion < QUESTIONS.length) {
+            intervalRef.current = setInterval(() => {
+              setTimeLeft(prev => {
+                if (prev <= 1) {
+                  handleNext();
+                  return 20;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+          }
+          return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+          };
+        }, [currentQuestion, finished]);
+
+        const handleSelect = (optionIndex) => {
+          setSelectedAnswer(optionIndex);
+          const newAnswers = [...answers];
+          newAnswers[currentQuestion] = optionIndex;
+          setAnswers(newAnswers);
+        };
+
+        const handleNext = () => {
+          if (selectedAnswer === null) return;
+          if (currentQuestion < QUESTIONS.length - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+            setSelectedAnswer(answers[currentQuestion + 1]);
+          } else {
+            setFinished(true);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+          }
+        };
+
+        const restartQuiz = () => {
+          setCurrentQuestion(0);
+          setSelectedAnswer(null);
+          setAnswers(Array(QUESTIONS.length).fill(null));
+          setFinished(false);
+        };
+
+        if (finished) {
+          const correctCount = answers.reduce((acc, ans, idx) => {
+            return ans === QUESTIONS[idx].answer ? acc + 1 : acc;
+          }, 0);
+          return (
+            <div className="card">
+              <h2>Результат теста</h2>
+              <div className="counter">{correctCount}/5</div>
+              <p>Ваш результат: {correctCount} из 5</p>
+              <button className="btn primary" onClick={restartQuiz}>Сыграть ещё раз</button>
+            </div>
+          );
+        }
+
+        const question = QUESTIONS[currentQuestion];
+        const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
+
+        return (
+          <div className="card">
+            <h2>Мини-квиз</h2>
+            <div className="muted">Вопрос {currentQuestion + 1} / {QUESTIONS.length}</div>
+            <progress value={progress} max="100" />
+            <div style={{ marginTop: '10px', fontSize: '14px', color: '#ff9999' }}>
+              Осталось: {timeLeft} сек
+            </div>
+            <div style={{ marginTop: '12px', fontSize: '18px', fontWeight: '600' }}>
+              {question.q}
+            </div>
+            <div style={{ marginTop: '12px' }}>
+              {question.options.map((option, idx) => (
+                <label key={idx} style={{ display: 'block', margin: '6px 0' }}>
+                  <input
+                    type="radio"
+                    name="answer"
+                    checked={selectedAnswer === idx}
+                    onChange={() => handleSelect(idx)}
+                  />
+                  {' '}{option}
+                </label>
+              ))}
+            </div>
+            <button
+              className="btn primary"
+              onClick={handleNext}
+              disabled={selectedAnswer === null}
+              style={{ marginTop: '16px' }}
+            >
+              Далее
+            </button>
+          </div>
+        );
+      }
+
+      function App(){
+        return (
+          <div className="container">
+            <div className="title">React.js Практикум: 3 задания (всё в браузере)</div>
+            <div className="grid">
+              <Task1 />
+              <Task2 />
+              <Task3 />
+            <div className="card">            
+                <h2>в функции задания должен происходить рендер блока класса "card"</h2>
+                блоки задания
+            </div>
+           </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App/>);
+    </script>
+  </body>
 </html>
